@@ -1,16 +1,18 @@
 html
   head
     title= title
+    link(rel="shortcut icon", href="favicon.ico", type="image/x-icon")
+    script(src="https://unpkg.com/colyseus.js@^0.14.0/dist/colyseus.js")
     style
         include static/css/game.css
-    script(src="https://unpkg.com/colyseus.js@^0.14.0/dist/colyseus.js")
 
   body
     div#score 0 P1 - P2 0
     div#voce
     p#log esperando conexão
     div#botoes
-        button(type="button")#pedra pedra
-        button(type="button")#papel papel
-        button(type="button")#tesoura tesoura
+        //- ✊✋✌️
+        button(type="button")#pedra ✊pedra
+        button(type="button")#papel ✋papel
+        button(type="button")#tesoura ✌️tesoura
     script(src="js/game.js")

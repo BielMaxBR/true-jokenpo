@@ -4,7 +4,8 @@ import express from "express";
 /**
  * Import your Room files
  */
-import { MyRoom } from "./rooms/MyRoom";
+import { GameRoom } from "./rooms/GameRoom";
+
 import GameController from "./controllers/GameController";
 
 export default Arena({
@@ -14,7 +15,7 @@ export default Arena({
         /**
          * Define your room handlers:
          */
-        gameServer.define("my_room", MyRoom);
+        gameServer.define("game", GameRoom);
     },
 
     initializeExpress: (app) => {
