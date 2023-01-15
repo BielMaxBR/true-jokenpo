@@ -1,11 +1,11 @@
 import Arena from "@colyseus/arena";
 import { monitor } from "@colyseus/monitor";
-
+import express from "express";
 /**
  * Import your Room files
  */
 import { MyRoom } from "./rooms/MyRoom";
-import GameController from "./controllers/GameController"
+import GameController from "./controllers/GameController";
 
 export default Arena({
     getId: () => "Your Colyseus App",
@@ -14,16 +14,16 @@ export default Arena({
         /**
          * Define your room handlers:
          */
-        gameServer.define('my_room', MyRoom);
-
+        gameServer.define("my_room", MyRoom);
     },
 
     initializeExpress: (app) => {
         /**
          * Bind your custom express routes here:
          */
-        app.set('views', './views')
-        app.set('view engine', 'pug');
+        app.set("views", "./views");
+        app.use(express.static("views/static"));
+        app.set("view engine", "pug");
         app.get("/", GameController.index);
 
         /**
@@ -34,10 +34,9 @@ export default Arena({
         app.use("/colyseus", monitor());
     },
 
-
     beforeListen: () => {
         /**
          * Before before gameServer.listen() is called.
          */
-    }
+    },
 });

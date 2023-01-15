@@ -2,7 +2,9 @@ html
   head
     title= title
     style
-        include css/game.css
+        include static/css/game.css
+    script(src="https://unpkg.com/colyseus.js@^0.14.0/dist/colyseus.js")
+
   body
     div#score 0 P1 - P2 0
     div#voce
@@ -11,4 +13,4 @@ html
         button(type="button")#pedra pedra
         button(type="button")#papel papel
         button(type="button")#tesoura tesoura
-    script(src="/views/js/game.js") 
+    script(src="js/game.js")
