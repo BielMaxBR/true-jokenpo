@@ -1,5 +1,14 @@
 html
   head
-    title= title 
+    title= title
+    style
+        include css/game.css
   body
-    p eita
+    div#score 0 P1 - P2 0
+    div#voce
+    p#log esperando conexão
+    div#botoes
+        button(type="button")#pedra pedra
+        button(type="button")#papel papel
+        button(type="button")#tesoura tesoura
+    script(src="/views/js/game.js") 

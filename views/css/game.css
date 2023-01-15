@@ -1,0 +1,16 @@
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: lightgrey;
+    font-family: cursive;
+}
+
+#log {
+    margin-top: 20%;
+}
+
+#botoes {
+    position: absolute;
+    top: 90%;
+}
