@@ -4,5 +4,17 @@ import { PlayerSchema } from "./PlayerSchema";
 
 export class GameState extends Schema {
     @type({ map: PlayerSchema }) players = new MapSchema<PlayerSchema>();
-    score: Number[] = [0, 0];
+    @type({ array: "string" }) order = new Array<string>();
+
+    start() {
+        for (let i = 0; i < 2; i++) {
+            const player = this.players.get(this.order[i]);
+            console.log("quem jogará é: " + this.order[i]);
+
+            player.isPlaying = true;
+
+            player.client.send("comecar");
+        }
+        
+    }
 }
