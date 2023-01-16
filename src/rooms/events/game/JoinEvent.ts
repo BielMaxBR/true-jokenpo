@@ -6,12 +6,7 @@ import { GameRoom } from "../../GameRoom";
 
 import { PlayerSchema } from "../../schema/PlayerSchema";
 
-export class OnJoinCommand extends Command<
-    GameRoom,
-    {
-        sessionId: string;
-    }
-> {
+export class OnJoinCommand extends Command<GameRoom> {
     execute(client: Client) {
         console.log(`jogador ${client.sessionId} entrou`);
         const player = new PlayerSchema();

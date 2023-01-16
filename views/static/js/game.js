@@ -8,6 +8,10 @@ async function init() {
 
         room.onMessage("comecar", comecar);
         room.onLeave(leave);
+        document.getElementById("botoes").addEventListener("click", e => {
+            console.log(e.srcElement.id)
+            room.send("escolha",e.srcElement.id)
+        })
     } catch (err) {
         console.error(err);
         changeLog("erro ao conectar com a sala", "red");
@@ -23,6 +27,7 @@ function leave(code) {
     console.log("desconectado da sala, código:", code);
 }
 
+init();
 init();
 
 function changeLog(text = "", color = 0x000000) {
