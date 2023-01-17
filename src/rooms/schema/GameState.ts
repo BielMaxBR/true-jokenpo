@@ -2,11 +2,12 @@ import { Schema, ArraySchema, type, MapSchema } from "@colyseus/schema";
 import { Client } from "colyseus";
 import { PlayerSchema } from "./PlayerSchema";
 import { ChoiceSchema } from "./ChoiceSchema";
+import { Constants } from "../../util/Constants";
 
 export class GameState extends Schema {
     @type({ map: PlayerSchema }) players = new MapSchema<PlayerSchema>();
     @type({ array: "string" }) order = new Array<string>();
-    @type({ array: "string" }) choices = new ArraySchema<ChoiceSchema>();
+    @type({ array: ChoiceSchema }) choices = new ArraySchema<ChoiceSchema>();
     @type("boolean") inGame: boolean = false;
 
     start() {
@@ -22,6 +23,29 @@ export class GameState extends Schema {
     }
 
     calc() {
-        
+        //
+        console.log("foi calcular");
+
+        const choiceObj1 = this.choices[0];
+        const choiceObj2 = this.choices[1];
+
+        const choice1 = ChoiceSchema.DEFAULT_CHOICES.indexOf(choiceObj1.choice);
+        const choice2 = ChoiceSchema.DEFAULT_CHOICES.indexOf(choiceObj2.choice);
+
+        if (choice1 == choice2) {
+            return {type: Constants.EMPATE};
+        } else if (
+            mod(choice1 - choice2, ChoiceSchema.DEFAULT_CHOICES.length) <
+            ChoiceSchema.DEFAULT_CHOICES.length / 2
+        ) {
+            return {type: Constants.VITORIA, winnerIndex:0, looserIndex:1};
+        } else {
+            return {type: Constants.VITORIA, winnerIndex:1, looserIndex:0};
+        }
+
+        function mod(a: number, b: number) {
+            const c = a % b;
+            return c < 0 ? c + b : c;
+        }
     }
 }
