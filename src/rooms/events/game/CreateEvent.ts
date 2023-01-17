@@ -7,6 +7,7 @@ import { GameRoom } from "../../GameRoom";
 
 import { ChoiceSchema } from "../../schema/ChoiceSchema";
 import { GameState } from "../../schema/GameState";
+import { PlayerSchema } from "../../schema/PlayerSchema";
 
 export class OnCreateCommand extends Command<GameRoom> {
     execute() {
@@ -21,12 +22,14 @@ export class OnCreateCommand extends Command<GameRoom> {
             if (!isValid) return;
 
             player.isPlaying = false;
-            client.send("espere");
 
             const choicesList = this.room.state.choices;
             choicesList.push(newChoice);
 
-            if (choicesList.length != 2) return;
+            if (choicesList.length != 2) {
+                client.send("espere");
+                return;
+            }
 
             //calcular pontos
             const result = this.room.state.calc();
@@ -34,23 +37,26 @@ export class OnCreateCommand extends Command<GameRoom> {
                 case Constants.EMPATE:
                     this.room.broadcast("empate", choicesList);
                     break;
-                
+
                 case Constants.VITORIA:
-                    const winner = this.room.state.players.get(
+                    const winner: PlayerSchema = this.room.state.players.get(
                         choicesList[result.winnerIndex].sessionId
-                    ).client;
+                    );
 
-                    const looser = this.room.state.players.get(
+                    const looser: PlayerSchema = this.room.state.players.get(
                         choicesList[result.looserIndex].sessionId
-                    ).client;
+                    );
 
-                    winner.send("ganhou", choicesList);
-                    looser.send("perdeu", choicesList);
+                    winner.client.send("ganhou", choicesList);
+                    looser.client.send("perdeu", choicesList);
+
+                    winner.isPlaying = false;
+                    looser.isPlaying = false;
 
                     this.room.broadcastExcept(
                         "resultado",
-                        { winnerIndex: 0, choicesList },
-                        [winner, looser]
+                        { winnerIndex: result.winnerIndex, choicesList },
+                        [winner.client, looser.client]
                     );
                     break;
             }

@@ -27,15 +27,15 @@ function comecar() {
 }
 
 function ganhou() {
-    changeLog("Ganhou!", "green")
+    changeLog("Ganhou!", "green");
 }
 
 function perdeu() {
-    changeLog("Perdeu ;-;", "blue")
+    changeLog("Perdeu ;-;", "blue");
 }
 
 function espere() {
-    changeLog("espere o adversário jogar")
+    changeLog("espere o adversário jogar");
 }
 
 function leave(code) {
