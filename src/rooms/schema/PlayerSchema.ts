@@ -3,6 +3,6 @@ import { Client } from "colyseus";
 
 export class PlayerSchema extends Schema {
     @type("number") score: number;
-    @type("boolean") isPlaying: Boolean;
+    @type("boolean") isPlaying: boolean;
     client: Client;
 }

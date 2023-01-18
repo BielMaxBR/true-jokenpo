@@ -6,7 +6,7 @@ import { Constants } from "../../util/Constants";
 
 export class GameState extends Schema {
     @type({ map: PlayerSchema }) players = new MapSchema<PlayerSchema>();
-    @type({ array: "string" }) order = new Array<string>();
+    @type(["string"]) order = new Array<string>();
     @type({ array: ChoiceSchema }) choices = new ArraySchema<ChoiceSchema>();
     @type("boolean") inGame: boolean = false;
 
@@ -22,8 +22,11 @@ export class GameState extends Schema {
         this.inGame = true;
     }
 
+    restart() {
+        this.start()
+    }
+
     calc() {
-        //
         console.log("foi calcular");
 
         const choiceObj1 = this.choices[0];
@@ -33,14 +36,14 @@ export class GameState extends Schema {
         const choice2 = ChoiceSchema.DEFAULT_CHOICES.indexOf(choiceObj2.choice);
 
         if (choice1 == choice2) {
-            return {type: Constants.EMPATE};
+            return { type: Constants.EMPATE };
         } else if (
             mod(choice1 - choice2, ChoiceSchema.DEFAULT_CHOICES.length) <
             ChoiceSchema.DEFAULT_CHOICES.length / 2
         ) {
-            return {type: Constants.VITORIA, winnerIndex:0, looserIndex:1};
+            return { type: Constants.VITORIA, winnerIndex: 0, looserIndex: 1 };
         } else {
-            return {type: Constants.VITORIA, winnerIndex:1, looserIndex:0};
+            return { type: Constants.VITORIA, winnerIndex: 1, looserIndex: 0 };
         }
 
         function mod(a: number, b: number) {

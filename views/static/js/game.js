@@ -10,6 +10,7 @@ async function init() {
         room.onMessage("ganhou", ganhou);
         room.onMessage("perdeu", perdeu);
         room.onMessage("espere", espere);
+        room.onMessage("resultado", resultado);
         room.onLeave(leave);
 
         document.getElementById("botoes").addEventListener("click", (e) => {
@@ -36,6 +37,11 @@ function perdeu() {
 
 function espere() {
     changeLog("espere o adversário jogar");
+}
+
+function resultado(data) {
+    changeLog("resuldados:");
+    console.log(data)
 }
 
 function leave(code) {
