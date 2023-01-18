@@ -9,6 +9,7 @@ async function init() {
         room.onMessage("comecar", comecar);
         room.onMessage("ganhou", ganhou);
         room.onMessage("perdeu", perdeu);
+        room.onMessage("empate", empate);
         room.onMessage("espere", espere);
         room.onMessage("resultado", resultado);
         room.onLeave(leave);
@@ -33,6 +34,10 @@ function ganhou() {
 
 function perdeu() {
     changeLog("Perdeu ;-;", "blue");
+}
+
+function empate() {
+    changeLog("empate '-'", "grey");
 }
 
 function espere() {

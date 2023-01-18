@@ -5,7 +5,6 @@ import { ChoiceSchema } from "../../../schema/ChoiceSchema";
 import { PlayerSchema } from "../../../schema/PlayerSchema";
 
 export function escolha(client: Client, message: string, room: GameRoom) {
-
     const player = room.state.players.get(client.sessionId);
     if (!player.isPlaying) return;
 
@@ -28,6 +27,7 @@ export function escolha(client: Client, message: string, room: GameRoom) {
     switch (result.type) {
         case Constants.EMPATE:
             room.broadcast("empate", choicesList);
+            room.reset();
             break;
 
         case Constants.VITORIA:
@@ -51,6 +51,7 @@ export function escolha(client: Client, message: string, room: GameRoom) {
                 { winnerIndex: result.winnerIndex, choicesList },
                 [winner.client, looser.client]
             );
+            room.reset(looser.client.sessionId);
             break;
     }
 }

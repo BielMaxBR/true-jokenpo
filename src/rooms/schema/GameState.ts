@@ -1,5 +1,4 @@
 import { Schema, ArraySchema, type, MapSchema } from "@colyseus/schema";
-import { Client } from "colyseus";
 import { PlayerSchema } from "./PlayerSchema";
 import { ChoiceSchema } from "./ChoiceSchema";
 import { Constants } from "../../util/Constants";
@@ -23,7 +22,8 @@ export class GameState extends Schema {
     }
 
     restart() {
-        this.start()
+        this.choices = new ArraySchema<ChoiceSchema>();
+        this.start();
     }
 
     calc() {
@@ -35,9 +35,9 @@ export class GameState extends Schema {
         const choice1 = ChoiceSchema.DEFAULT_CHOICES.indexOf(choiceObj1.choice);
         const choice2 = ChoiceSchema.DEFAULT_CHOICES.indexOf(choiceObj2.choice);
 
-        if (choice1 == choice2) {
-            return { type: Constants.EMPATE };
-        } else if (
+        if (choice1 == choice2) return { type: Constants.EMPATE };
+
+        if (
             mod(choice1 - choice2, ChoiceSchema.DEFAULT_CHOICES.length) <
             ChoiceSchema.DEFAULT_CHOICES.length / 2
         ) {

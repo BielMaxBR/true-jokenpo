@@ -15,7 +15,7 @@ export class OnLeaveCommand extends Command<GameRoom> {
 
         this.leave(client);
 
-        if (!isPlaying) return;
+        if (!isPlaying || this.state.order.length == 0) return;
         
         if (existsMorePlayers) {
             console.log("era pra recomeçar");

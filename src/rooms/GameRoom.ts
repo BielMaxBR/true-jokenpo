@@ -1,4 +1,4 @@
-import { Room, Client } from "colyseus";
+import { Room, Client, Clock } from "colyseus";
 import { Dispatcher } from "@colyseus/command";
 
 import { GameState } from "./schema/GameState";
@@ -33,5 +33,19 @@ export class GameRoom extends Room<GameState> {
 
             client.send(type, data);
         });
+    }
+
+    reset(looserId?: string) {
+        this.clock.setTimeout(() => {
+            this.state.restart();
+        }, 3000);
+
+        if (!looserId || this.state.order.length <= 2) return;
+
+        const looserIndex: number = this.state.order.indexOf(looserId);
+        
+        this.state.order.splice(looserIndex, 1);
+        this.state.order.push(looserId);
+        
     }
 }
