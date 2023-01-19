@@ -1,0 +1,6 @@
+{
+    "extension": ["js", "ts"],
+    "timeout": "15000",
+    "exit": true,
+    "_": ["test/**/*.ts"]
+}
