@@ -6,7 +6,14 @@ import { PlayerSchema } from "../../../schema/PlayerSchema";
 
 export function escolha(client: Client, message: string, room: GameRoom) {
     const player = room.state.players.get(client.sessionId);
-    if (!player.isPlaying || !room.state.inGame || room.state.choices.find(choice => choice.sessionId == client.sessionId)) return;
+    if (
+        !player.isPlaying ||
+        !room.state.inGame ||
+        room.state.choices.find(
+            (choice) => choice.sessionId == client.sessionId
+        )
+    )
+        return;
 
     const newChoice: ChoiceSchema = new ChoiceSchema();
     const isValid = newChoice.add(message, client.sessionId);
@@ -43,6 +50,8 @@ export function escolha(client: Client, message: string, room: GameRoom) {
             winner.isPlaying = false;
             looser.isPlaying = false;
             room.state.inGame = false;
+
+            winner.score += 1;
 
             room.broadcastExcept(
                 "resultado",
