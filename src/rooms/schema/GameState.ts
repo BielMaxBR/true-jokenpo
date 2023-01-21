@@ -62,6 +62,16 @@ export class GameState extends Schema {
         this.start(room, isEmpate);
     }
 
+    stop() {
+        this.inGame = false;
+        const lastPlayerStand = this.players.get(this.order[0]);
+        if (lastPlayerStand) {
+            lastPlayerStand.isPlaying = false;
+            lastPlayerStand.client.send("esperando");
+        }
+        this.choices = new ArraySchema<ChoiceSchema>();
+    }
+
     calc() {
         console.log("foi calcular");
 

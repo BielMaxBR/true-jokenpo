@@ -3,11 +3,12 @@ async function init() {
 
     try {
         const room = await client.joinOrCreate("game");
-        window.room = room
+        window.room = room;
         console.log(room.sessionId, "joined", room.name);
         changeLog("conectado a sala");
 
         room.onMessage("comecar", comecar);
+        room.onMessage("esperando", esperando);
         room.onMessage("ja comecou", jaComecou);
         room.onMessage("comecando", comecando);
         room.onMessage("ganhou", ganhou);
@@ -15,7 +16,7 @@ async function init() {
         room.onMessage("empate", empate);
         room.onMessage("espere", espere);
         room.onMessage("resultado", resultado);
-        
+
         room.onStateChange(stateMudou);
         room.onLeave(leave);
 
@@ -30,11 +31,15 @@ async function init() {
 }
 
 function stateMudou(state) {
-    console.log(state.order.toArray().length)
+    console.log("ordem de jogada", state.order.toArray());
 }
 
 function comecar() {
     changeLog("JOGUE");
+}
+
+function esperando() {
+    changeLog("Esperando alguém aparecer pra começar");
 }
 
 function comecando(lista) {
@@ -63,7 +68,7 @@ function espere() {
 
 function resultado(data) {
     changeLog("resuldados:");
-    console.log(data)
+    console.log(data);
 }
 
 function leave(code) {

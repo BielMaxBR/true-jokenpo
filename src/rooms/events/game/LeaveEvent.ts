@@ -16,7 +16,7 @@ export class OnLeaveCommand extends Command<GameRoom> {
         this.leave(client);
 
         if (!isPlaying || this.state.order.length == 0) return;
-        
+
         if (existsMorePlayers) {
             console.log("era pra recomeçar");
             // recomeça a fase
@@ -24,6 +24,7 @@ export class OnLeaveCommand extends Command<GameRoom> {
         } else {
             // volta a esperar
             console.log("era pra terminar");
+            this.state.stop();
         }
     }
 
