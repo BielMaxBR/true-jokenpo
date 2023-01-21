@@ -6,13 +6,11 @@ import { PlayerSchema } from "../../../schema/PlayerSchema";
 
 export function escolha(client: Client, message: string, room: GameRoom) {
     const player = room.state.players.get(client.sessionId);
-    if (!player.isPlaying) return;
+    if (!player.isPlaying || !room.state.inGame || room.state.choices.find(choice => choice.sessionId == client.sessionId)) return;
 
     const newChoice: ChoiceSchema = new ChoiceSchema();
     const isValid = newChoice.add(message, client.sessionId);
     if (!isValid) return;
-
-    player.isPlaying = false;
 
     const choicesList = room.state.choices;
     choicesList.push(newChoice);
@@ -27,7 +25,7 @@ export function escolha(client: Client, message: string, room: GameRoom) {
     switch (result.type) {
         case Constants.EMPATE:
             room.broadcast("empate", choicesList);
-            room.reset();
+            room.state.reset(room, { isEmpate: true });
             break;
 
         case Constants.VITORIA:
@@ -51,7 +49,7 @@ export function escolha(client: Client, message: string, room: GameRoom) {
                 { winnerIndex: result.winnerIndex, choicesList },
                 [winner.client, looser.client]
             );
-            room.reset(looser.client.sessionId);
+            room.state.reset(room, { looserId: looser.client.sessionId });
             break;
     }
 }

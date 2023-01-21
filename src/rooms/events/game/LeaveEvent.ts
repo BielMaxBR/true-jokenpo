@@ -20,7 +20,7 @@ export class OnLeaveCommand extends Command<GameRoom> {
         if (existsMorePlayers) {
             console.log("era pra recomeçar");
             // recomeça a fase
-            this.state.restart();
+            this.state.restart(this.room);
         } else {
             // volta a esperar
             console.log("era pra terminar");

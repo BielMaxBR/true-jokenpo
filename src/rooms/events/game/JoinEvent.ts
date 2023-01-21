@@ -18,7 +18,9 @@ export class OnJoinCommand extends Command<GameRoom> {
         if (this.state.order.length == 2) {
             // começa a fase
             console.log("era pra começar");
-            this.state.start();
+            this.state.start(this.room);
+            return
         }
+        if (this.state.inGame) client.send("ja comecou", [this.state.order[0], this.state.order[1]])
     }
 }

@@ -3,15 +3,20 @@ async function init() {
 
     try {
         const room = await client.joinOrCreate("game");
+        window.room = room
         console.log(room.sessionId, "joined", room.name);
         changeLog("conectado a sala");
 
         room.onMessage("comecar", comecar);
+        room.onMessage("ja comecou", jaComecou);
+        room.onMessage("comecando", comecando);
         room.onMessage("ganhou", ganhou);
         room.onMessage("perdeu", perdeu);
         room.onMessage("empate", empate);
         room.onMessage("espere", espere);
         room.onMessage("resultado", resultado);
+        
+        room.onStateChange(stateMudou);
         room.onLeave(leave);
 
         document.getElementById("botoes").addEventListener("click", (e) => {
@@ -24,8 +29,20 @@ async function init() {
     }
 }
 
+function stateMudou(state) {
+    console.log(state.order.toArray().length)
+}
+
 function comecar() {
     changeLog("JOGUE");
+}
+
+function comecando(lista) {
+    changeLog(`partida de ${lista[0]} contra ${lista[1]}`);
+}
+
+function jaComecou(lista) {
+    changeLog("uma partida está em andamento");
 }
 
 function ganhou() {

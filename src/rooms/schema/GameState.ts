@@ -2,6 +2,8 @@ import { Schema, ArraySchema, type, MapSchema } from "@colyseus/schema";
 import { PlayerSchema } from "./PlayerSchema";
 import { ChoiceSchema } from "./ChoiceSchema";
 import { Constants } from "../../util/Constants";
+import { GameRoom } from "../GameRoom";
+import { Client } from "colyseus";
 
 export class GameState extends Schema {
     @type({ map: PlayerSchema }) players = new MapSchema<PlayerSchema>();
@@ -9,21 +11,55 @@ export class GameState extends Schema {
     @type({ array: ChoiceSchema }) choices = new ArraySchema<ChoiceSchema>();
     @type("boolean") inGame: boolean = false;
 
-    start() {
+    start(room: GameRoom, isEmpate?: boolean) {
+        const roundList: Array<Client> = [];
         for (let i = 0; i < 2; i++) {
             const player = this.players.get(this.order[i]);
             console.log("quem jogará é: " + this.order[i]);
 
             player.isPlaying = true;
-
-            player.client.send("comecar");
+            roundList.push(player.client);
         }
         this.inGame = true;
+
+        room.broadcast(
+            "comecando",
+            roundList.map((client) => client.sessionId)
+        );
+
+        room.clock.setTimeout(
+            () => {
+                roundList.forEach((client) => client.send("comecar"));
+
+                room.broadcastExcept(
+                    "ja comecou",
+                    roundList.map((client) => client.sessionId),
+                    roundList
+                );
+            },
+            isEmpate ? 0 : 3000
+        );
     }
 
-    restart() {
+    reset(
+        room: GameRoom,
+        { looserId, isEmpate }: { looserId?: string; isEmpate?: boolean }
+    ) {
+        room.clock.setTimeout(() => {
+            this.restart(room, isEmpate);
+        }, 3000);
+
+        if (!looserId || this.order.length <= 2) return;
+
+        const looserIndex: number = this.order.indexOf(looserId);
+
+        this.order.splice(looserIndex, 1);
+        this.order.push(looserId);
+    }
+
+    restart(room: GameRoom, isEmpate?: boolean) {
         this.choices = new ArraySchema<ChoiceSchema>();
-        this.start();
+        this.start(room, isEmpate);
     }
 
     calc() {
